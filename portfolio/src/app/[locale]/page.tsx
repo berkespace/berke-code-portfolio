@@ -11,13 +11,27 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
-      <Projects showViewAll />
-      <Experience experiences={[]} />
-      <Tools />
-      <Testimonials />
-      <Blog />
-      <FAQ />
-      <ContactCTA />
+      <div data-speed="0.95">
+        <Projects showViewAll />
+      </div>
+      <div data-speed="0.92">
+        <Experience experiences={[]} />
+      </div>
+      <div data-speed="0.97">
+        <Tools />
+      </div>
+      <div data-speed="0.94">
+        <Testimonials />
+      </div>
+      <div data-speed="0.96">
+        <Blog />
+      </div>
+      <div data-speed="0.93">
+        <FAQ />
+      </div>
+      <div data-speed="0.98">
+        <ContactCTA />
+      </div>
     </main>
   )
 }

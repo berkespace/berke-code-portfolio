@@ -72,10 +72,10 @@ export function Experience({ experiences = PLACEHOLDER_EXPERIENCES }: Experience
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: '#7C3AED' }}>
+          <p data-gsap-reveal className="mb-1 text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: '#7C3AED' }}>
             {t('subtitle')}
           </p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{t('title')}</h2>
+          <h2 data-gsap-reveal className="text-3xl font-bold tracking-tight sm:text-4xl">{t('title')}</h2>
         </motion.div>
 
         <motion.div

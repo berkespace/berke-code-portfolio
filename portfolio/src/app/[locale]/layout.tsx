@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation'
 import { routing } from '@/lib/i18n/routing'
 import { FloatingNav } from '@/components/layout/FloatingNav'
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
+import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider'
 import '../globals.css'
 
 const geistSans = Geist({
@@ -58,10 +59,12 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     >
       <body className="min-h-full">
         <NextIntlClientProvider>
+          <LanguageSwitcher />
+          <FloatingNav />
           <div className="relative z-10">
-            <LanguageSwitcher />
-            {children}
-            <FloatingNav />
+            <SmoothScrollProvider>
+              {children}
+            </SmoothScrollProvider>
           </div>
         </NextIntlClientProvider>
       </body>

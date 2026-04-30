@@ -1,9 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, MapPin } from 'lucide-react'
-import Image from 'next/image'
-import { IconBrandGithub, IconBrandTwitter, IconBrandInstagram, IconMail } from '@tabler/icons-react'
+import { ArrowRight } from 'lucide-react'
 import {
   SiDrizzle,
   SiFramer,
@@ -16,10 +14,11 @@ import {
 } from 'react-icons/si'
 import { useLocale, useTranslations } from 'next-intl'
 
-import { Link } from '@/lib/i18n/navigation'
+import { Link, useRouter } from '@/lib/i18n/navigation'
 import { EASE_OUT, GITHUB_URL, EMAIL, STATS, STAGGER_DELAY } from '@/lib/constants'
 import DarkVeil from '@/components/ui/DarkVeil'
 import LogoLoop, { type LogoItem } from '@/components/ui/LogoLoop'
+import ProfileCard from '@/components/ui/ProfileCard'
 
 const container = {
   hidden: {},
@@ -36,13 +35,6 @@ const fadeLeft = {
   show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: EASE_OUT } },
 }
 
-const SOCIAL_LINKS = [
-  { icon: IconBrandGithub, href: GITHUB_URL, label: 'GitHub' },
-  { icon: IconBrandTwitter, href: 'https://twitter.com/berkespace', label: 'Twitter' },
-  { icon: IconBrandInstagram, href: '#', label: 'Instagram' },
-  { icon: IconMail, href: `mailto:${EMAIL}`, label: 'Email' },
-]
-
 const TECH_LOGOS: LogoItem[] = [
   { node: <SiReact />, title: 'React', href: 'https://react.dev', ariaLabel: 'React' },
   { node: <SiNextdotjs />, title: 'Next.js', href: 'https://nextjs.org', ariaLabel: 'Next.js' },
@@ -57,6 +49,7 @@ const TECH_LOGOS: LogoItem[] = [
 export function Hero() {
   const t = useTranslations('hero')
   const locale = useLocale()
+  const router = useRouter()
 
   return (
     <section className="section-padding relative isolate min-h-screen overflow-hidden pt-28 pb-20">
@@ -87,70 +80,22 @@ export function Hero() {
             animate="show"
             className="w-full shrink-0 lg:w-72"
           >
-            <div
-              className="flex flex-col items-center gap-5 rounded-3xl p-6 text-center"
-              style={{
-                background: 'rgba(18, 16, 30, 0.78)',
-              }}
-            >
-              {/* Avatar */}
-              <div
-                className="relative size-52 overflow-hidden rounded-2xl"
-                style={{ background: 'linear-gradient(135deg, #2f1d72 0%, #131322 100%)' }}
-              >
-                <Image
-                  src="/profile-picture/profile.jpeg"
-                  alt="Berke profile picture"
-                  fill
-                  priority
-                  sizes="208px"
-                  className="object-cover"
-                />
-                <div
-                  className="absolute inset-0 flex items-end justify-center"
-                  style={{ background: 'linear-gradient(180deg, rgba(139,92,246,0.22) 0%, rgba(10,10,10,0.68) 100%)' }}
-                >
-                </div>
-              </div>
-
-              {/* Name + Role */}
-              <div className="flex flex-col gap-1">
-                <h2 className="text-xl font-bold tracking-tight">Berke</h2>
-                <p className="text-sm" style={{ color: '#A1A1C2' }}>
-                  Full-Stack Developer
-                </p>
-                <span className="mt-1 inline-flex items-center justify-center gap-1.5 text-xs" style={{ color: '#A1A1C2' }}>
-                  <MapPin size={11} />
-                  Turkey
-                </span>
-              </div>
-
-              {/* Social icons */}
-              <div className="flex items-center gap-2">
-                {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target={href.startsWith('http') ? '_blank' : undefined}
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="flex size-9 items-center justify-center rounded-xl transition-colors hover:bg-white/[0.08]"
-                    style={{ color: '#A1A1C2' }}
-                  >
-                    <Icon size={17} />
-                  </a>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <Link
-                href="/contact"
-                className="w-full rounded-xl py-2.5 text-center text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                style={{ background: '#8B5CF6' }}
-              >
-                {locale === 'tr' ? "Konuşalım" : "Let's Talk"}
-              </Link>
-            </div>
+            <ProfileCard
+              name="Berke"
+              title="Full-Stack Developer"
+              handle="berkespace"
+              status={locale === 'tr' ? 'Uygun' : 'Available'}
+              contactText={locale === 'tr' ? 'Konuşalım' : 'Contact Me'}
+              avatarUrl="/profile-picture/profile.jpeg"
+              miniAvatarUrl="/profile-picture/profile.jpeg"
+              showUserInfo
+              enableTilt
+              enableMobileTilt={false}
+              onContactClick={() => router.push('/contact')}
+              behindGlowEnabled
+              behindGlowColor="rgba(139, 92, 246, 0.42)"
+              innerGradient="linear-gradient(145deg, rgba(24,17,44,0.78) 0%, rgba(74,46,142,0.32) 100%)"
+            />
           </motion.div>
 
           {/* ── Right: Content ── */}
@@ -162,7 +107,7 @@ export function Hero() {
           >
             {/* Headline */}
             <motion.div variants={fadeUp} className="flex flex-col gap-4">
-              <h1 className="text-5xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl lg:text-[4.5rem]">
+              <h1 data-gsap-reveal className="text-5xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl lg:text-[4.5rem]">
                 {locale === 'tr' ? (
                   <>
                     Fikirlerinizi<br />
@@ -176,7 +121,7 @@ export function Hero() {
                   </>
                 )}
               </h1>
-              <p className="max-w-lg text-base leading-relaxed sm:text-lg" style={{ color: '#B0B0CC' }}>
+              <p data-gsap-reveal className="max-w-lg text-base leading-relaxed sm:text-lg" style={{ color: '#B0B0CC' }}>
                 {t('description')}
               </p>
             </motion.div>
