@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "home": "Anasayfa",
+    "projects": "Projeler",
+    "services": "Hizmetler",
+    "experience": "Deneyim",
+    "blog": "Blog",
+    "contact": "İletişim"
+  },
+  "hero": {
+    "greeting": "Merhaba, ben",
+    "name": "Berke",
+    "role": "Full-Stack Developer",
+    "description": "Modern web teknolojileriyle kullanıcı deneyimini ön planda tutan, hızlı ve ölçeklenebilir uygulamalar geliştiriyorum.",
+    "cta_primary": "Projelerime Bak",
+    "cta_secondary": "İletişime Geç",
+    "available": "Freelance için müsaitim"
+  },
+  "stats": {
+    "title": "Sayılarla Ben"
+  },
+  "projects": {
+    "title": "Projeler",
+    "subtitle": "Öne çıkan çalışmalarım",
+    "view_all": "Tümünü Gör",
+    "view_demo": "Demo",
+    "view_code": "Kod",
+    "featured": "Öne Çıkan",
+    "no_projects": "Henüz proje eklenmedi.",
+    "back": "← Geri"
+  },
+  "experience": {
+    "title": "Deneyim",
+    "subtitle": "Profesyonel yolculuğum",
+    "present": "Günümüz",
+    "no_experience": "Henüz deneyim eklenmedi."
+  },
+  "services": {
+    "title": "Hizmetler",
+    "subtitle": "Neler yapabilirim?",
+    "web_dev": "Web Geliştirme",
+    "web_dev_desc": "React ve Next.js ile modern, hızlı ve SEO dostu web uygulamaları",
+    "backend": "Backend Geliştirme",
+    "backend_desc": "Node.js ve PostgreSQL ile güçlü REST API'lar ve veritabanı sistemleri",
+    "mobile": "Responsive Tasarım",
+    "mobile_desc": "Tüm cihazlarda mükemmel görünen, pixel-perfect arayüzler",
+    "consulting": "Teknik Danışmanlık",
+    "consulting_desc": "Proje mimarisi, teknoloji seçimi ve code review konularında rehberlik"
+  },
+  "tools": {
+    "title": "Teknolojiler",
+    "subtitle": "Kullandığım teknoloji yığını"
+  },
+  "testimonials": {
+    "title": "Referanslar",
+    "subtitle": "Müşteriler ne diyor?"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Düşünceler ve yazılar",
+    "read_more": "Devamını Oku",
+    "view_all": "Tüm Yazılar",
+    "min_read": "dk okuma"
+  },
+  "faq": {
+    "title": "Sık Sorulan Sorular",
+    "subtitle": "Aklınızdaki sorulara cevaplar"
+  },
+  "contact": {
+    "title": "İletişim",
+    "subtitle": "Bir projen mi var? Konuşalım.",
+    "name": "Ad Soyad",
+    "email": "E-posta",
+    "message": "Mesaj",
+    "send": "Gönder",
+    "sending": "Gönderiliyor...",
+    "success": "Mesajınız iletildi! En kısa sürede dönüş yapacağım.",
+    "error": "Bir hata oluştu, lütfen tekrar deneyin.",
+    "name_placeholder": "Adınızı girin",
+    "email_placeholder": "E-posta adresiniz",
+    "message_placeholder": "Projenizi anlatın...",
+    "or_email": "veya doğrudan e-posta gönderin"
+  },
+  "page_titles": {
+    "home": "Berke — Full-Stack Developer",
+    "projects": "Projeler — Berke",
+    "experience": "Deneyim — Berke",
+    "services": "Hizmetler — Berke",
+    "blog": "Blog — Berke",
+    "contact": "İletişim — Berke"
+  }
+}

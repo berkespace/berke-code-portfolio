@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "services": "Services",
+    "experience": "Experience",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "hero": {
+    "greeting": "Hi, I'm",
+    "name": "Berke",
+    "role": "Full-Stack Developer",
+    "description": "I build fast, scalable applications with modern web technologies — always keeping the user experience first.",
+    "cta_primary": "View My Work",
+    "cta_secondary": "Get In Touch",
+    "available": "Available for freelance"
+  },
+  "stats": {
+    "title": "By The Numbers"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Featured work",
+    "view_all": "View All",
+    "view_demo": "Demo",
+    "view_code": "Code",
+    "featured": "Featured",
+    "no_projects": "No projects added yet.",
+    "back": "← Back"
+  },
+  "experience": {
+    "title": "Experience",
+    "subtitle": "My professional journey",
+    "present": "Present",
+    "no_experience": "No experience added yet."
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "What can I do?",
+    "web_dev": "Web Development",
+    "web_dev_desc": "Modern, fast, and SEO-friendly web applications with React and Next.js",
+    "backend": "Backend Development",
+    "backend_desc": "Powerful REST APIs and database systems with Node.js and PostgreSQL",
+    "mobile": "Responsive Design",
+    "mobile_desc": "Pixel-perfect interfaces that look great on every device",
+    "consulting": "Technical Consulting",
+    "consulting_desc": "Guidance on project architecture, technology selection, and code review"
+  },
+  "tools": {
+    "title": "Technologies",
+    "subtitle": "My tech stack"
+  },
+  "testimonials": {
+    "title": "Testimonials",
+    "subtitle": "What clients say"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Thoughts and writings",
+    "read_more": "Read More",
+    "view_all": "All Posts",
+    "min_read": "min read"
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Answers to common questions"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Have a project? Let's talk.",
+    "name": "Full Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send",
+    "sending": "Sending...",
+    "success": "Message sent! I'll get back to you shortly.",
+    "error": "Something went wrong. Please try again.",
+    "name_placeholder": "Your name",
+    "email_placeholder": "Your email address",
+    "message_placeholder": "Tell me about your project...",
+    "or_email": "or send me an email directly"
+  },
+  "page_titles": {
+    "home": "Berke — Full-Stack Developer",
+    "projects": "Projects — Berke",
+    "experience": "Experience — Berke",
+    "services": "Services — Berke",
+    "blog": "Blog — Berke",
+    "contact": "Contact — Berke"
+  }
+}
