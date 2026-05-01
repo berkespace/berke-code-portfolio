@@ -45,6 +45,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-geist-sans);
+  --font-display: var(--font-bricolage), system-ui, sans-serif;
   --color-border: var(--border);
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -96,6 +97,16 @@
   ::-webkit-scrollbar-thumb {
     background: rgba(124, 58, 237, 0.4);
     border-radius: 2px;
+  }
+}
+
+/* Projects section – slogan overlay: desktop only, guaranteed via plain CSS */
+.projects-slogan-overlay {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .projects-slogan-overlay {
+    display: block;
   }
 }
 

@@ -11,9 +11,7 @@ export default function HomePage() {
   return (
     <main>
       <Hero />
-      <div data-speed="0.95">
-        <Projects showViewAll />
-      </div>
+      <Projects showViewAll />
       <div data-speed="0.92">
         <Experience experiences={[]} />
       </div>
