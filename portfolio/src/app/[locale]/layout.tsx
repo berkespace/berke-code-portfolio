@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 
 import { routing } from '@/lib/i18n/routing'
+import { BrandLogo } from '@/components/layout/BrandLogo'
 import { FloatingNav } from '@/components/layout/FloatingNav'
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher'
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider'
@@ -65,6 +66,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     >
       <body className="min-h-full">
         <NextIntlClientProvider>
+          <BrandLogo />
           <LanguageSwitcher />
           <FloatingNav />
           <div className="relative z-10">

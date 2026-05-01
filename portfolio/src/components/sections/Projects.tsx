@@ -155,6 +155,8 @@ export function Projects({ projects, showViewAll = true }: ProjectsProps) {
     const sl0 = sloganOverlay.querySelector<HTMLElement>('.js-sl-0')
     const sl1 = sloganOverlay.querySelector<HTMLElement>('.js-sl-1')
     const sl2 = sloganOverlay.querySelector<HTMLElement>('.js-sl-2')
+    const logoFill = sloganOverlay.querySelector<SVGPathElement>('.js-logo-fill')
+    const logoStroke = sloganOverlay.querySelector<SVGPathElement>('.js-logo-stroke')
 
     // Main content elements
     const chars1    = section.querySelectorAll<HTMLElement>('.js-c1')
@@ -163,11 +165,22 @@ export function Projects({ projects, showViewAll = true }: ProjectsProps) {
     const viewAllEl = section.querySelector<HTMLElement>('.js-view-all')
     const label     = labelRef.current
 
-    if (!sl0 || !sl1 || !sl2) return
+    if (!sl0 || !sl1 || !sl2 || !logoFill || !logoStroke) return
 
     // ── Initial hidden states ─────────────────────────────────────────────────
-    // Slogan words: each in its own overflow:hidden wrapper → '110vh' hides them below
-    gsap.set([sl0, sl1, sl2], { y: '110vh' })
+    // Slogan words: first one enters from below, others wait with blur/fade
+    const offscreenY = Math.round(window.innerHeight * 1.1)
+    gsap.set([sl0, sl1, sl2], { y: 0, opacity: 0, filter: 'blur(14px)', scale: 0.96 })
+    gsap.set(sl0, { y: offscreenY, opacity: 1, filter: 'blur(0px)', scale: 1 })
+    const logoLength = logoStroke.getTotalLength()
+    gsap.set(logoFill, { opacity: 0, scale: 0.88, transformOrigin: '50% 50%' })
+    gsap.set(logoStroke, {
+      opacity: 0,
+      strokeDasharray: logoLength,
+      strokeDashoffset: logoLength,
+      scale: 0.88,
+      transformOrigin: '50% 50%',
+    })
     // Main content starts invisible (behind the overlay)
     gsap.set([chars1, chars2], { yPercent: 115 })
     gsap.set(cards, { opacity: 0, y: 40 })
@@ -178,36 +191,112 @@ export function Projects({ projects, showViewAll = true }: ProjectsProps) {
 
     // ── Desktop: pinned scrubbed timeline ─────────────────────────────────────
     mm.add('(min-width: 1024px)', () => {
+      const offscreenY = Math.round(window.innerHeight * 1.1)
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top top',
           end: '+=4800',
           pin: true,
-          scrub: 1.1,
+          scrub: 1.2,
           anticipatePin: 1,
         },
       })
 
       tl
         // ── Phase 1: Sequential full-screen slogans ──────────────────────────
-        // Word 1 in
-        .to(sl0, { y: 0, duration: 0.5, ease: 'power3.out' })
-        .to({}, { duration: 0.45 })
-        // Word 1 out → Word 2 in (simultaneous swap)
-        .to(sl0, { y: '-110vh', duration: 0.48, ease: 'power2.in' })
-        .to(sl1, { y: 0,       duration: 0.5,  ease: 'power3.out' }, '<')
-        .to({}, { duration: 0.45 })
-        // Word 2 out → Word 3 in
-        .to(sl1, { y: '-110vh', duration: 0.48, ease: 'power2.in' })
-        .to(sl2, { y: 0,       duration: 0.5,  ease: 'power3.out' }, '<')
-        .to({}, { duration: 0.45 })
-        // Word 3 out
-        .to(sl2, { y: '-110vh', duration: 0.48, ease: 'power2.in' })
+        .addLabel('slogan-1-in')
+        .to(sl0, { y: 0, duration: 1.2, ease: 'power3.out' })
+        .to({}, { duration: 1.05 })
+
+        .addLabel('slogan-1-out-2-in')
+        .to(sl0, {
+          opacity: 0,
+          filter: 'blur(18px)',
+          scale: 1.08,
+          duration: 1.12,
+          ease: 'power2.inOut',
+        })
+        .to(
+          sl1,
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            scale: 1,
+            duration: 1.18,
+            ease: 'power3.out',
+          },
+          '<0.18'
+        )
+        .to({}, { duration: 1.05 })
+
+        .addLabel('slogan-2-out-3-in')
+        .to(sl1, {
+          opacity: 0,
+          filter: 'blur(18px)',
+          scale: 1.08,
+          duration: 1.12,
+          ease: 'power2.inOut',
+        })
+        .to(
+          sl2,
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            scale: 1,
+            duration: 1.18,
+            ease: 'power3.out',
+          },
+          '<0.18'
+        )
+        .to({}, { duration: 1.05 })
+
+        .addLabel('slogan-3-out')
+        .to(sl2, {
+          opacity: 0,
+          filter: 'blur(18px)',
+          scale: 1.08,
+          duration: 1.16,
+          ease: 'power2.inOut',
+        })
+
+        // ── Phase 1.5: Fullscreen logo finale ────────────────────────────────
+        .addLabel('logo-finale')
+        .to(logoStroke, {
+          opacity: 1,
+          duration: 0.18,
+          ease: 'power1.out',
+        })
+        .to(logoStroke, {
+          strokeDashoffset: 0,
+          scale: 1,
+          duration: 1.15,
+          ease: 'power3.inOut',
+        })
+        .to(
+          logoFill,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.55,
+            ease: 'power2.out',
+          },
+          '-=0.2'
+        )
+        .to(
+          [logoFill, logoStroke],
+          {
+            opacity: 0,
+            duration: 0.6,
+            ease: 'power2.inOut',
+          },
+          '+=0.35'
+        )
 
         // ── Phase 2: Overlay lifts off, revealing main content ───────────────
         // Overlay slides up — main content underneath is already rendered
-        .to(sloganOverlay, { yPercent: -100, duration: 0.55, ease: 'power2.in' }, '-=0.05')
+        .addLabel('overlay-out')
+        .to(sloganOverlay, { yPercent: -100, duration: 0.6, ease: 'power2.in' }, '-=0.05')
 
         // ── Phase 3: Main content entrance ───────────────────────────────────
         .to(label,  { opacity: 1, y: 0, duration: 0.2 }, '-=0.15')
@@ -359,7 +448,7 @@ export function Projects({ projects, showViewAll = true }: ProjectsProps) {
        */}
       <div
         ref={sloganOverlayRef}
-        className="pointer-events-none hidden lg:block"
+        className="projects-slogan-overlay pointer-events-none"
         style={{
           position: 'absolute',
           inset: 0,
@@ -367,6 +456,49 @@ export function Projects({ projects, showViewAll = true }: ProjectsProps) {
           background: '#050505',
         }}
       >
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          <svg
+            viewBox="0 0 858 741"
+            style={{
+              width: 'min(94vw, 1280px)',
+              height: 'min(94vh, 1080px)',
+              overflow: 'visible',
+            }}
+            aria-hidden
+          >
+            <defs>
+              <linearGradient id="projects-logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#F5F5F5" />
+                <stop offset="45%" stopColor="#B38BFF" />
+                <stop offset="100%" stopColor="#7C3AED" />
+              </linearGradient>
+            </defs>
+            <path
+              className="js-logo-fill"
+              d="M 827 31 L 344 30 L 289 119 L 550 119 L 554 123 L 269 335 L 236 335 L 235 366 L 469 366 L 471 370 L 221 558 L 30 707 L 33 710 L 264 581 L 536 421 L 756 287 L 755 285 L 489 285 L 488 282 Z"
+              fill="url(#projects-logo-gradient)"
+            />
+            <path
+              className="js-logo-stroke"
+              d="M 827 31 L 344 30 L 289 119 L 550 119 L 554 123 L 269 335 L 236 335 L 235 366 L 469 366 L 471 370 L 221 558 L 30 707 L 33 710 L 264 581 L 536 421 L 756 287 L 755 285 L 489 285 L 488 282 Z"
+              fill="none"
+              stroke="url(#projects-logo-gradient)"
+              strokeWidth="28"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+
         {slogans.map((slogan, i) => (
           /*
            * Each word gets its own overflow:hidden wrapper that fills the overlay.

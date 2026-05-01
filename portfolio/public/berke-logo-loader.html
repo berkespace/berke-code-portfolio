@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <title>Berke Logo Loading Animation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <template id="__bundler_thumbnail">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" fill="#f6f4ef"/>
+      <path d="M 78 20 L 38 20 L 33 30 L 58 30 L 32 52 L 28 52 L 28 56 L 50 56 L 24 75 L 6 90 L 6 92 L 28 78 L 56 62 L 76 48 L 76 47 L 50 47 L 50 46 Z" fill="#0a0a0a" transform="translate(8, 4) scale(0.95)"/>
+    </svg>
+  </template>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #f6f4ef; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    #app { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .loader-wrap { width: min(90vw, 720px); aspect-ratio: 16 / 9; position: relative; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="app"><div class="loader-wrap"><div id="logo-mount" style="width:100%;height:100%;"></div></div></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    const LOGO_PATH = "M 827 31 L 344 30 L 289 119 L 550 119 L 554 123 L 269 335 L 236 335 L 235 366 L 469 366 L 471 370 L 221 558 L 30 707 L 33 710 L 264 581 L 536 421 L 756 287 L 755 285 L 489 285 L 488 282 Z";
+    const LOGO_VIEWBOX = "0 0 858 741";
+
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const easeInOutQuart = (t) => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t);
+
+    // Standalone loop-friendly loader. Cycle: 0 → DRAW (3.0s) → HOLD (1.2s) → FADE (0.6s) → reset
+    const CYCLE = 4.8;
+    const DRAW_END = 3.0;
+    const HOLD_END = 4.2;
+
+    function LogoBrush() {
+      const [t, setT] = useState(0);
+      const startRef = useRef(performance.now());
+      const pathRef = useRef(null);
+      const [pathLength, setPathLength] = useState(4000);
+
+      useEffect(() => {
+        if (pathRef.current) setPathLength(pathRef.current.getTotalLength());
+      }, []);
+
+      useEffect(() => {
+        let raf;
+        const tick = (now) => {
+          const elapsed = ((now - startRef.current) / 1000) % CYCLE;
+          setT(elapsed);
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(raf);
+      }, []);
+
+      // Draw progress 0 → 1 across DRAW_END seconds
+      const drawProgress = clamp(t / DRAW_END, 0, 1);
+      const eased = easeInOutQuart(drawProgress);
+      const dashOffset = pathLength * (1 - eased);
+
+      // Fade between HOLD_END and CYCLE
+      const fade = t > HOLD_END ? 1 - clamp((t - HOLD_END) / (CYCLE - HOLD_END), 0, 1) : 1;
+
+      // Brush tip
+      const [tip, setTip] = useState({ x: 0, y: 0, angle: 0, visible: false, speed: 0 });
+      const prevRef = useRef({ x: 0, y: 0 });
+      useEffect(() => {
+        if (!pathRef.current) return;
+        if (drawProgress > 0.001 && drawProgress < 0.999) {
+          const len = pathLength * eased;
+          const pt = pathRef.current.getPointAtLength(len);
+          const ahead = pathRef.current.getPointAtLength(Math.min(len + 6, pathLength));
+          const angle = Math.atan2(ahead.y - pt.y, ahead.x - pt.x) * 180 / Math.PI;
+          const dx = pt.x - prevRef.current.x;
+          const dy = pt.y - prevRef.current.y;
+          const speed = Math.sqrt(dx * dx + dy * dy);
+          prevRef.current = { x: pt.x, y: pt.y };
+          setTip({ x: pt.x, y: pt.y, angle, visible: true, speed });
+        } else {
+          setTip(s => ({ ...s, visible: false }));
+        }
+      }, [eased, pathLength, drawProgress]);
+
+      const splatters = useMemo(() => {
+        const arr = [];
+        for (let i = 0; i < 36; i++) {
+          const r = 2 + ((i * 7919) % 7);
+          const ox = ((i * 9301 + 49297) % 180) - 90;
+          const oy = ((i * 49297 + 9301) % 180) - 90;
+          const at = 0.02 + (i * 0.027) % 0.95;
+          arr.push({ r, ox, oy, at });
+        }
+        return arr;
+      }, []);
+
+      return (
+        <svg viewBox={LOGO_VIEWBOX} style={{ width: '100%', height: '100%', overflow: 'visible', display: 'block', opacity: fade }} shapeRendering="geometricPrecision">
+          <defs>
+            <filter id="brushy" x="-15%" y="-15%" width="130%" height="130%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="5" />
+              <feDisplacementMap in="SourceGraphic" scale="9" />
+            </filter>
+            <filter id="tipBlur" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="6" />
+            </filter>
+            <mask id="brushSweep" maskUnits="userSpaceOnUse" x="-100" y="-100" width="1058" height="941">
+              <rect x="-100" y="-100" width="1058" height="941" fill="black" />
+              <path
+                ref={pathRef}
+                d={LOGO_PATH}
+                fill="none"
+                stroke="white"
+                strokeWidth="320"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray={pathLength}
+                strokeDashoffset={dashOffset}
+              />
+            </mask>
+          </defs>
+
+          <g mask="url(#brushSweep)">
+            <path d={LOGO_PATH} fill="#0a0a0a" filter="url(#brushy)" />
+            <path d={LOGO_PATH} fill="#0a0a0a" />
+          </g>
+
+          <g>
+            {splatters.map((s, i) => {
+              if (drawProgress < s.at || drawProgress > s.at + 0.6) return null;
+              const localFade = clamp((drawProgress - s.at) / 0.05, 0, 1) * (1 - clamp((drawProgress - s.at - 0.4) / 0.2, 0, 1));
+              if (!pathRef.current) return null;
+              let pt;
+              try { pt = pathRef.current.getPointAtLength(pathLength * easeInOutQuart(s.at)); } catch { return null; }
+              return <circle key={i} cx={pt.x + s.ox} cy={pt.y + s.oy} r={s.r} fill="#0a0a0a" opacity={0.7 * localFade} />;
+            })}
+          </g>
+
+          {tip.visible && (
+            <g transform={`translate(${tip.x}, ${tip.y}) rotate(${tip.angle})`}>
+              <ellipse rx={Math.min(60, 30 + tip.speed * 0.8)} ry="18" fill="#0a0a0a" filter="url(#tipBlur)" opacity="0.7" />
+              <ellipse rx="22" ry="14" fill="#0a0a0a" />
+            </g>
+          )}
+        </svg>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('logo-mount')).render(<LogoBrush />);
+  </script>
+</body>
+</html>
